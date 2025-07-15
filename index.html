@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instant Solutions Hub</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      background: #4a90e2;
+      color: white;
+      padding: 20px;
+    }
+    .container {
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 400px;
+      font-size: 1rem;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .ad-box {
+      height: 100px;
+      border: 2px dashed #aaa;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .results .qa {
+      margin-bottom: 15px;
+    }
+    .results .qa h4 {
+      margin: 0;
+      color: #333;
+    }
+    .results .qa p {
+      margin: 5px 0 0 0;
+    }
+    canvas {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Instant Solutions Hub</h1>
+  <p>Search 100,000+ Questions and Use Helpful Calculators</p>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <input type="text" id="search" placeholder="Search for a question..." onkeyup="searchQuestions()"/>
+    <div class="ad-box">Your Advertisement Here</div>
+    <div class="results" id="results"><p>Start typing to search questions...</p></div>
+  </div>
+
+  <div class="section">
+    <h3>BMI Calculator</h3>
+    <input type="number" id="bmi-weight" placeholder="Weight in kg" />
+    <input type="number" id="bmi-height" placeholder="Height in cm" />
+    <button onclick="calculateBMI()">Calculate BMI</button>
+    <canvas id="bmiChart" height="100"></canvas>
+  </div>
+
+  <div class="section">
+    <h3>Budget Planner</h3>
+    <input type="number" id="income" placeholder="Monthly Income" />
+    <input type="number" id="expenses" placeholder="Monthly Expenses" />
+    <button onclick="calculateBudget()">Calculate Budget</button>
+    <canvas id="budgetChart" height="100"></canvas>
+  </div>
+
+  <div class="section">
+    <h3>Water Intake Calculator</h3>
+    <input type="number" id="water-weight" placeholder="Weight in kg" />
+    <button onclick="calculateWater()">Calculate Water Intake</button>
+    <p id="water-result"></p>
+  </div>
+
+  <div class="section">
+    <h3>Calorie Needs Estimator</h3>
+    <input type="number" id="calorie-age" placeholder="Age" />
+    <input type="number" id="calorie-weight" placeholder="Weight in kg" />
+    <input type="number" id="calorie-height" placeholder="Height in cm" />
+    <button onclick="calculateCalories()">Estimate Calories</button>
+    <p id="calorie-result"></p>
+  </div>
+
+  <div class="section">
+    <h3>Unit Converter</h3>
+    <input type="number" id="kg" placeholder="Kilograms" oninput="convertKgToLb()" />
+    <input type="number" id="lb" placeholder="Pounds" oninput="convertLbToKg()" />
+    <input type="number" id="cm" placeholder="Centimeters" oninput="convertCmToIn()" />
+    <input type="number" id="inch" placeholder="Inches" oninput="convertInToCm()" />
+  </div>
+
+</div>
+
+<script>
+  let questions = [];
+  async function loadQuestions() {
+    try {
+      const res = await fetch('questions.json');
+      questions = await res.json();
+    } catch (e) {
+      console.error('Could not load questions:', e);
+    }
+  }
+
+  function searchQuestions() {
+    const input = document.getElementById('search').value.toLowerCase();
+    const resultsDiv = document.getElementById('results');
+    if (!input) {
+      resultsDiv.innerHTML = '<p>Start typing to search questions...</p>';
+      return;
+    }
+    const filtered = questions.filter(q => q.question.toLowerCase().includes(input));
+    const html = filtered.slice(0, 20).map(q =>
+      `<div class="qa"><h4>${q.question}</h4><p>${q.answer}</p></div>`
+    ).join('');
+    resultsDiv.innerHTML = html || '<p>No matches found.</p>';
+  }
+
+  function calculateBMI() {
+    const w = parseFloat(document.getElementById('bmi-weight').value);
+    const h = parseFloat(document.getElementById('bmi-height').value) / 100;
+    if (!w || !h) return;
+    const bmi = w / (h * h);
+    const ctx = document.getElementById('bmiChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['BMI'],
+        datasets: [{
+          label: 'BMI',
+          data: [bmi.toFixed(2)],
+          backgroundColor: '#3498db'
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  function calculateBudget() {
+    const income = parseFloat(document.getElementById('income').value);
+    const expenses = parseFloat(document.getElementById('expenses').value);
+    if (!income || !expenses) return;
+    const savings = income - expenses;
+    const ctx = document.getElementById('budgetChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Expenses', 'Savings'],
+        datasets: [{
+          data: [expenses, savings],
+          backgroundColor: ['#e74c3c', '#2ecc71']
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  function calculateWater() {
+    const w = parseFloat(document.getElementById('water-weight').value);
+    if (!w) return;
+    document.getElementById('water-result').textContent = `You need ~${(w * 35).toFixed(0)} ml of water daily.`;
+  }
+
+  function calculateCalories() {
+    const age = parseFloat(document.getElementById('calorie-age').value);
+    const w = parseFloat(document.getElementById('calorie-weight').value);
+    const h = parseFloat(document.getElementById('calorie-height').value);
+    if (!age || !w || !h) return;
+    const bmr = 10 * w + 6.25 * h - 5 * age + 5;
+    document.getElementById('calorie-result').textContent = `Estimated daily calories: ${Math.round(bmr)} kcal.`;
+  }
+
+  function convertKgToLb() {
+    const kg = parseFloat(document.getElementById('kg').value);
+    document.getElementById('lb').value = kg ? (kg * 2.20462).toFixed(2) : '';
+  }
+
+  function convertLbToKg() {
+    const lb = parseFloat(document.getElementById('lb').value);
+    document.getElementById('kg').value = lb ? (lb / 2.20462).toFixed(2) : '';
+  }
+
+  function convertCmToIn() {
+    const cm = parseFloat(document.getElementById('cm').value);
+    document.getElementById('inch').value = cm ? (cm / 2.54).toFixed(2) : '';
+  }
+
+  function convertInToCm() {
+    const inch = parseFloat(document.getElementById('inch').value);
+    document.getElementById('cm').value = inch ? (inch * 2.54).toFixed(2) : '';
+  }
+
+  window.onload = loadQuestions;
+</script>
+
+</body>
+</html>
