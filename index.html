@@ -3,193 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Instant Solutions Hub - Fixed</title>
+  <title>Instant Solutions Hub - Full Version</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f7fa; margin: 0; padding: 0; }
-    header { text-align: center; background: #4a90e2; color: white; padding: 20px; }
-    .container { padding: 20px; }
-    input, select, button { padding: 10px; margin: 5px 0; width: 100%; max-width: 400px; font-size: 1rem; }
-    .section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .ad-box { height: 100px; border: 2px dashed #aaa; text-align: center; display: flex; justify-content: center; align-items: center; color: #888; font-size: 0.9rem; }
-    canvas { max-width: 100%; }
-  </style>
+  <style>body { font-family: Arial, sans-serif; background: #f4f7fa; margin: 0; padding: 0; } header { text-align: center; background: #4a90e2; color: white; padding: 20px; } .container { padding: 20px; } input, select, button { padding: 10px; margin: 5px 0; width: 100%; max-width: 400px; font-size: 1rem; } .section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); } canvas { max-width: 100%; }</style>
 </head>
 <body>
-
-<header>
-  <h1>Instant Solutions Hub</h1>
-  <p>Helpful Calculators - All Fixed and Improved</p>
-</header>
-
-<div class="container">
-
-  <div class="section">
-    <h3>BMI Calculator</h3>
-    <input type="number" id="bmi-weight" placeholder="Weight in kg" />
-    <input type="number" id="bmi-height" placeholder="Height in cm" />
-    <input type="number" id="bmi-age" placeholder="Age" />
-    <button onclick="calculateBMI()">Calculate BMI</button>
-    <p id="bmi-result"></p>
-    <canvas id="bmiChart" height="100"></canvas>
-  </div>
-
-  <div class="section">
-    <h3>Budget Planner</h3>
-    <input type="number" id="income" placeholder="Monthly Income" />
-    <input type="number" id="expenses" placeholder="Monthly Expenses" />
-    <input type="number" id="basic-needs" placeholder="Basic Needs Expenses" />
-    <button onclick="calculateBudget()">Calculate Budget</button>
-    <p id="budget-tips"></p>
-    <canvas id="budgetChart" height="100"></canvas>
-  </div>
-
-  <div class="section">
-    <h3>Water Intake Calculator</h3>
-    <input type="number" id="water-weight" placeholder="Weight in kg" />
-    <input type="number" id="water-age" placeholder="Age" />
-    <input type="number" id="water-height" placeholder="Height in cm" />
-    <select id="water-season">
-      <option value="summer">Summer</option>
-      <option value="winter">Winter</option>
-      <option value="spring">Spring</option>
-      <option value="autumn">Autumn</option>
-    </select>
-    <button onclick="calculateWater()">Calculate Water Intake</button>
-    <p id="water-result"></p>
-  </div>
-
-  <div class="section">
-    <h3>Calorie Needs Estimator</h3>
-    <input type="number" id="calorie-age" placeholder="Age" />
-    <input type="number" id="calorie-weight" placeholder="Weight in kg" />
-    <input type="number" id="calorie-height" placeholder="Height in cm" />
-    <select id="calorie-gender">
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-    </select>
-    <button onclick="calculateCalories()">Estimate Calories</button>
-    <p id="calorie-result"></p>
-  </div>
-
-  <div class="section">
-    <h3>Unit Converter</h3>
-    <input type="number" id="kg" placeholder="Kilograms" oninput="convertKgToLb()" />
-    <input type="number" id="lb" placeholder="Pounds" oninput="convertLbToKg()" />
-    <input type="number" id="cm" placeholder="Centimeters" oninput="convertCmToIn()" />
-    <input type="number" id="inch" placeholder="Inches" oninput="convertInToCm()" />
-    <input type="number" id="tola" placeholder="Tola" oninput="convertTolaToGram()" />
-    <input type="number" id="gram" placeholder="Gram" oninput="convertGramToTola()" />
-    <input type="number" id="carat" placeholder="Carat" oninput="convertCaratToGram()" />
-    <input type="number" id="carat-gram" placeholder="Gram for Carat" oninput="convertGramToCarat()" />
-  </div>
-
+<header><h1>Instant Solutions Hub</h1><p>All Calculators Improved</p></header><div class="container">
+<div class="section">
+<h3>Budget Planner</h3>
+<input type="number" id="income" placeholder="Monthly Income" />
+<input type="number" id="rent" placeholder="House Rent" />
+<input type="number" id="electricity" placeholder="Electricity Bill" />
+<input type="number" id="gas" placeholder="Gas Bill" />
+<input type="number" id="phone" placeholder="Phone/Internet Bill" />
+<input type="number" id="fuel" placeholder="Car Fuel" />
+<input type="number" id="groceries" placeholder="Groceries" />
+<input type="number" id="others" placeholder="Other Expenses" />
+<select id="region"><option value="urban">Urban</option><option value="rural">Rural</option></select>
+<button onclick="calculateBudget()">Calculate Budget</button>
+<p id="budget-summary"></p><canvas id="budgetChart" height="100"></canvas>
 </div>
-
-<script>
-  let bmiChart, budgetChart;
-
-  function calculateBMI() {
-    const w = parseFloat(document.getElementById('bmi-weight').value);
-    const h = parseFloat(document.getElementById('bmi-height').value) / 100;
-    const age = parseFloat(document.getElementById('bmi-age').value);
-    if (!w || !h) return;
-    const bmi = w / (h * h);
-    let advice = '';
-    if (age && age > 65) advice = ' Note: Older adults may have slightly different healthy BMI ranges.';
-    document.getElementById('bmi-result').textContent = `Your BMI is ${bmi.toFixed(2)}.${advice}`;
-    const ctx = document.getElementById('bmiChart').getContext('2d');
-    if (bmiChart) bmiChart.destroy();
-    bmiChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['BMI'],
-        datasets: [{ label: 'BMI', data: [bmi.toFixed(2)], backgroundColor: '#3498db' }]
-      },
-      options: { responsive: true }
-    });
-  }
-
-  function calculateBudget() {
-    const income = parseFloat(document.getElementById('income').value);
-    const expenses = parseFloat(document.getElementById('expenses').value);
-    const basicNeeds = parseFloat(document.getElementById('basic-needs').value) || 0;
-    if (!income || !expenses) return;
-    const wants = expenses - basicNeeds;
-    const savings = income - expenses;
-    const ctx = document.getElementById('budgetChart').getContext('2d');
-    if (budgetChart) budgetChart.destroy();
-    budgetChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Basic Needs', 'Wants', 'Savings'],
-        datasets: [{ data: [basicNeeds, wants, savings], backgroundColor: ['#f39c12', '#e74c3c', '#2ecc71'] }]
-      },
-      options: { responsive: true }
-    });
-    let tips = 'Tip: Track your wants and cut non-essentials.';
-    if (wants > income * 0.3) tips += ' Try to keep wants below 30% of your income.';
-    document.getElementById('budget-tips').textContent = tips;
-  }
-
-  function calculateWater() {
-    const w = parseFloat(document.getElementById('water-weight').value);
-    const age = parseFloat(document.getElementById('water-age').value);
-    const height = parseFloat(document.getElementById('water-height').value);
-    const season = document.getElementById('water-season').value;
-    if (!w) return;
-    let base = w * 35;
-    if (age && age > 50) base *= 0.9;
-    if (height && height > 180) base += 200;
-    if (season === 'summer') base *= 1.2;
-    if (season === 'winter') base *= 0.9;
-    document.getElementById('water-result').textContent = `Recommended water intake: ~${base.toFixed(0)} ml daily.`;
-  }
-
-  function calculateCalories() {
-    const age = parseFloat(document.getElementById('calorie-age').value);
-    const w = parseFloat(document.getElementById('calorie-weight').value);
-    const h = parseFloat(document.getElementById('calorie-height').value);
-    const gender = document.getElementById('calorie-gender').value;
-    if (!age || !w || !h) return;
-    let bmr = 10 * w + 6.25 * h - 5 * age;
-    bmr += gender === 'male' ? 5 : -161;
-    document.getElementById('calorie-result').textContent = `Estimated daily calories: ${Math.round(bmr)} kcal.`;
-  }
-
-  function convertKgToLb() {
-    const kg = parseFloat(document.getElementById('kg').value);
-    document.getElementById('lb').value = kg ? (kg * 2.20462).toFixed(2) : '';
-  }
-  function convertLbToKg() {
-    const lb = parseFloat(document.getElementById('lb').value);
-    document.getElementById('kg').value = lb ? (lb / 2.20462).toFixed(2) : '';
-  }
-  function convertCmToIn() {
-    const cm = parseFloat(document.getElementById('cm').value);
-    document.getElementById('inch').value = cm ? (cm / 2.54).toFixed(2) : '';
-  }
-  function convertInToCm() {
-    const inch = parseFloat(document.getElementById('inch').value);
-    document.getElementById('cm').value = inch ? (inch * 2.54).toFixed(2) : '';
-  }
-  function convertTolaToGram() {
-    const tola = parseFloat(document.getElementById('tola').value);
-    document.getElementById('gram').value = tola ? (tola * 11.6638).toFixed(2) : '';
-  }
-  function convertGramToTola() {
-    const gram = parseFloat(document.getElementById('gram').value);
-    document.getElementById('tola').value = gram ? (gram / 11.6638).toFixed(2) : '';
-  }
-  function convertCaratToGram() {
-    const carat = parseFloat(document.getElementById('carat').value);
-    document.getElementById('carat-gram').value = carat ? (carat * 0.2).toFixed(2) : '';
-  }
-  function convertGramToCarat() {
-    const gram = parseFloat(document.getElementById('carat-gram').value);
-    document.getElementById('carat').value = gram ? (gram / 0.2).toFixed(2) : '';
-  }
-</script>
-
-</body>
-</html>
+<div class="section">
+<h3>Unit Converter</h3>
+<input type="number" id="kg" placeholder="Kilograms" oninput="convertKgToLb()" />
+<input type="number" id="lb" placeholder="Pounds" oninput="convertLbToKg()" />
+<input type="number" id="cm" placeholder="Centimeters" oninput="convertCmToIn()" />
+<input type="number" id="inch" placeholder="Inches" oninput="convertInToCm()" />
+<input type="number" id="tola" placeholder="Tola" oninput="convertTolaToGram()" />
+<input type="number" id="gram" placeholder="Gram" oninput="convertGramToTola()" />
+<input type="number" id="carat" placeholder="Carat" oninput="convertCaratToGram()" />
+<input type="number" id="carat-gram" placeholder="Gram for Carat" oninput="convertGramToCarat()" />
+<input type="number" id="meter" placeholder="Meter" oninput="convertMeterToFeet()" />
+<input type="number" id="feet" placeholder="Feet" oninput="convertFeetToMeter()" />
+</div>
+<div class="section">
+<h3>Zakat Calculator</h3>
+<input type="number" id="zakat-cash" placeholder="Cash/Bank Balance" />
+<input type="number" id="zakat-gold" placeholder="Gold in grams" />
+<input type="number" id="zakat-silver" placeholder="Silver in grams" />
+<button onclick="calculateZakat()">Calculate Zakat</button>
+<p id="zakat-result"></p>
+</div></div>
+<script>let budgetChart;
+function calculateBudget() {
+const income = parseFloat(document.getElementById('income').value);
+const rent = parseFloat(document.getElementById('rent').value)||0;
+const electricity = parseFloat(document.getElementById('electricity').value)||0;
+const gas = parseFloat(document.getElementById('gas').value)||0;
+const phone = parseFloat(document.getElementById('phone').value)||0;
+const fuel = parseFloat(document.getElementById('fuel').value)||0;
+const groceries = parseFloat(document.getElementById('groceries').value)||0;
+const others = parseFloat(document.getElementById('others').value)||0;
+const region = document.getElementById('region').value;
+const totalExpenses = rent+electricity+gas+phone+fuel+groceries+others;
+const savings = income - totalExpenses;
+if(budgetChart) budgetChart.destroy();
+const ctx = document.getElementById('budgetChart').getContext('2d');
+budgetChart = new Chart(ctx, { type:'pie', data:{ labels:['Expenses','Savings'], datasets:[{ data:[totalExpenses,savings], backgroundColor:['#e74c3c','#2ecc71'] }] }, options:{ responsive:true }});
+let summary = `Total Expenses: ${totalExpenses}, Savings: ${savings}`;
+if(region==='urban') summary += ' Urban region: plan for higher utility costs.';
+else summary += ' Rural region: expenses may vary.';
+document.getElementById('budget-summary').textContent = summary;}
+function convertKgToLb() { const kg=parseFloat(document.getElementById('kg').value); document.getElementById('lb').value = kg ? (kg*2.20462).toFixed(2) : ''; }
+function convertLbToKg() { const lb=parseFloat(document.getElementById('lb').value); document.getElementById('kg').value = lb ? (lb/2.20462).toFixed(2) : ''; }
+function convertCmToIn() { const cm=parseFloat(document.getElementById('cm').value); document.getElementById('inch').value = cm ? (cm/2.54).toFixed(2) : ''; }
+function convertInToCm() { const inch=parseFloat(document.getElementById('inch').value); document.getElementById('cm').value = inch ? (inch*2.54).toFixed(2) : ''; }
+function convertTolaToGram() { const t=parseFloat(document.getElementById('tola').value); document.getElementById('gram').value = t ? (t*11.6638).toFixed(2) : ''; }
+function convertGramToTola() { const g=parseFloat(document.getElementById('gram').value); document.getElementById('tola').value = g ? (g/11.6638).toFixed(2) : ''; }
+function convertCaratToGram() { const c=parseFloat(document.getElementById('carat').value); document.getElementById('carat-gram').value = c ? (c*0.2).toFixed(2) : ''; }
+function convertGramToCarat() { const g=parseFloat(document.getElementById('carat-gram').value); document.getElementById('carat').value = g ? (g/0.2).toFixed(2) : ''; }
+function convertMeterToFeet() { const m=parseFloat(document.getElementById('meter').value); document.getElementById('feet').value = m ? (m*3.28084).toFixed(2) : ''; }
+function convertFeetToMeter() { const f=parseFloat(document.getElementById('feet').value); document.getElementById('meter').value = f ? (f/3.28084).toFixed(2) : ''; }
+function calculateZakat() { const cash=parseFloat(document.getElementById('zakat-cash').value)||0; const gold=parseFloat(document.getElementById('zakat-gold').value)||0; const silver=parseFloat(document.getElementById('zakat-silver').value)||0; const total = cash + (gold*11000) + (silver*130); const nisab = 49000; if(total>=nisab) document.getElementById('zakat-result').textContent = `Your Zakat: ${(total*0.025).toFixed(0)} PKR`; else document.getElementById('zakat-result').textContent = 'Below Nisab: No Zakat due.';}
+</script></body></html>
